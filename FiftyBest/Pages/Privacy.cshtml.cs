@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace FiftyBest.Pages
+namespace Ploeh.FiftyBest.Pages
 {
     public class PrivacyModel : PageModel
     {
