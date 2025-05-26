@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>Ploeh.$(MSBuildProjectName)</AssemblyName>
     <RootNamespace>Ploeh.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
