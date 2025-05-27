@@ -18,53 +18,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Data\2002.csv" />
-    <None Remove="Data\2003.csv" />
-    <None Remove="Data\2004.csv" />
-    <None Remove="Data\2005.csv" />
-    <None Remove="Data\2006.csv" />
-    <None Remove="Data\2007.csv" />
-    <None Remove="Data\2008.csv" />
-    <None Remove="Data\2009.csv" />
-    <None Remove="Data\2010.csv" />
-    <None Remove="Data\2011.csv" />
-    <None Remove="Data\2012.csv" />
-    <None Remove="Data\2013.csv" />
-    <None Remove="Data\2014.csv" />
-    <None Remove="Data\2015.csv" />
-    <None Remove="Data\2016.csv" />
-    <None Remove="Data\2017.csv" />
-    <None Remove="Data\2018.csv" />
-    <None Remove="Data\2019.csv" />
-    <None Remove="Data\2021.csv" />
-    <None Remove="Data\2022.csv" />
-    <None Remove="Data\2023.csv" />
-    <None Remove="Data\2024.csv" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Data\2002.csv" />
-    <Content Include="Data\2003.csv" />
-    <Content Include="Data\2004.csv" />
-    <Content Include="Data\2005.csv" />
-    <Content Include="Data\2006.csv" />
-    <Content Include="Data\2007.csv" />
-    <Content Include="Data\2008.csv" />
-    <Content Include="Data\2009.csv" />
-    <Content Include="Data\2010.csv" />
-    <Content Include="Data\2011.csv" />
-    <Content Include="Data\2012.csv" />
-    <Content Include="Data\2013.csv" />
-    <Content Include="Data\2014.csv" />
-    <Content Include="Data\2015.csv" />
-    <Content Include="Data\2016.csv" />
-    <Content Include="Data\2017.csv" />
-    <Content Include="Data\2018.csv" />
-    <Content Include="Data\2019.csv" />
-    <Content Include="Data\2021.csv" />
-    <Content Include="Data\2022.csv" />
-    <Content Include="Data\2023.csv" />
-    <Content Include="Data\2024.csv" />
+    <Content Include="Data\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
