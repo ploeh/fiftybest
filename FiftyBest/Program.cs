@@ -1,7 +1,10 @@
+using Ploeh.FiftyBest;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddSingleton(FiftyBestData.Load("Data"));
 
 var app = builder.Build();
 
