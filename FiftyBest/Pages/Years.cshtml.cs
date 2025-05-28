@@ -7,13 +7,25 @@ public class YearsModel(FiftyBestData data) : PageModel
 {
     public ushort Year { get; private set; }
     public ushort FirstYear => data.EntriesByYear.Keys.Min();
+
     public ushort? PreviousYear
     {
         get
         {
-            var foo = Years.Skip(1).Zip(Years).ToDictionary();
-            if (foo.TryGetValue(Year, out var previousYear))
+            var dict = Years.Skip(1).Zip(Years).ToDictionary();
+            if (dict.TryGetValue(Year, out var previousYear))
                 return previousYear;
+            return null;
+        }
+    }
+
+    public ushort? NextYear
+    {
+        get
+        {
+            var dict = Years.Zip(Years.Skip(1)).ToDictionary();
+            if (dict.TryGetValue(Year, out var nextYear))
+                return nextYear;
             return null;
         }
     }

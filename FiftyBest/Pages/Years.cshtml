@@ -30,10 +30,10 @@
             </li>
         }
 
-        @if (Model.Year < Model.LastYear)
+        @if (Model.NextYear is {})
         {
             <li class="page-item">
-                <a class="page-link" asp-page="/Years" asp-route-year="@(Model.Year + 1)">Next&nbsp;&raquo;</a>
+                <a class="page-link" asp-page="/Years" asp-route-year="@(Model.NextYear)">Next&nbsp;&raquo;</a>
             </li>
         }
         else
