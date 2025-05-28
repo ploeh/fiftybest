@@ -61,7 +61,7 @@
             <tr>
                 <td>@Model.Year</td>
                 <td>@entry.Rank</td>
-                <td>@entry.Name</td>
+                <td><a asp-page="/Restaurants" asp-route-country="@entry.Country" asp-route-city="@entry.City" asp-route-name="@entry.Name">@entry.Name</a></td>
                 <td>@entry.City</td>
                 <td>@entry.Country</td>
             </tr>
