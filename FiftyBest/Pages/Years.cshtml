@@ -1,10 +1,11 @@
 ﻿@page "{year?}"
 @model YearsModel
 @{
+    ViewData["Title"] = "Top Restaurants of " + Model.Year;
 }
 
 <div class="text-center">
-    @Model.Year
+    <h1 class="display-4">@Model.Year</h1>
 </div>
 
 <table class="table">
