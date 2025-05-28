@@ -8,6 +8,17 @@
     <h1 class="display-4">@Model.Year</h1>
 </div>
 
+<nav aria-label="Year navigation">
+    <ul class="pagination">
+        @foreach (var year in Model.Years)
+        {
+            <li class="page-item @(year == Model.Year ? "active" : "")">
+                <a class="page-link" asp-page="/Years" asp-route-year="@year">@year</a>
+            </li>
+        }
+    </ul>
+</nav>
+
 <table class="table">
     <thead>
         <tr>
