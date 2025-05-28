@@ -8,6 +8,7 @@ public class RestaurantsModel(FiftyBestData data) : PageModel
     public string? Country { get; private set; }
     public string? City { get; private set; }
     public string? Name { get; private set; }
+    public IReadOnlyCollection<Ranking> Rankings { get; private set; } = [];
 
     public void OnGet(string country, string city, string name)
     {
@@ -18,6 +19,7 @@ public class RestaurantsModel(FiftyBestData data) : PageModel
             Country = rankings.Country;
             City = city;
             Name = name;
+            Rankings = rankings.Rankings;
         }
         else
         {

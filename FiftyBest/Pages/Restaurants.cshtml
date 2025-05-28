@@ -7,3 +7,21 @@
     <h1 class="display-4">@Model.Name</h1>
     <p>@Model.City, @Model.Country</p>
 </div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Year</th>
+            <th>Rank</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ranking in Model.Rankings)
+        {
+            <tr>
+                <td>@ranking.Year</td>
+                <td>@ranking.Rank</td>
+            </tr>
+        }
+    </tbody>
+</table>
