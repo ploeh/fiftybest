@@ -6,3 +6,27 @@
 <div class="text-center">
     @Model.Year
 </div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Year</th>
+            <th>Rank</th>
+            <th>Restaurant</th>
+            <th>City</th>
+            <th>Country</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var entry in Model.Entries)
+        {
+            <tr>
+                <td>@Model.Year</td>
+                <td>@entry.Rank</td>
+                <td>@entry.Name</td>
+                <td>@entry.City</td>
+                <td>@entry.Country</td>
+            </tr>
+        }
+    </tbody>
+</table>

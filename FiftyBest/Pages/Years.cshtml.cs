@@ -5,15 +5,13 @@ namespace Ploeh.FiftyBest.Pages;
 
 public class YearsModel(FiftyBestData data) : PageModel
 {
-    public ushort Year { get; set; }
-
-    //public void OnGet()
-    //{
-    //    Year = data.EntriesByYear.Keys.Max();
-    //}
+    public ushort Year { get; private set; }
+    public IReadOnlyCollection<FiftyBestEntry> Entries { get; private set; } =
+        [];
 
     public void OnGet(ushort? year)
     {
         Year = year ?? data.EntriesByYear.Keys.Max();
+        Entries = data.EntriesByYear[Year];
     }
 }
