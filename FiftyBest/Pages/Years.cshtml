@@ -10,10 +10,36 @@
 
 <nav aria-label="Year navigation">
     <ul class="pagination">
+        @if (Model.Year > Model.FirstYear)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-page="/Years" asp-route-year="@(Model.Year - 1)">&laquo;&nbsp;Previous</a>
+            </li>
+        }
+        else
+        {
+            <li class="page-item disabled">
+                <span class="page-link">&laquo;&nbsp;Previous</span>
+            </li>
+        }
+
         @foreach (var year in Model.Years)
         {
             <li class="page-item @(year == Model.Year ? "active" : "")">
                 <a class="page-link" asp-page="/Years" asp-route-year="@year">@year</a>
+            </li>
+        }
+
+        @if (Model.Year < Model.LastYear)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-page="/Years" asp-route-year="@(Model.Year + 1)">Next&nbsp;&raquo;</a>
+            </li>
+        }
+        else
+        {
+            <li class="page-item disabled">
+                <span class="page-link">Next&nbsp;&raquo;</span>
             </li>
         }
     </ul>
