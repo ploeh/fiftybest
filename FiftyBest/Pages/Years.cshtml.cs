@@ -7,6 +7,17 @@ public class YearsModel(FiftyBestData data) : PageModel
 {
     public ushort Year { get; private set; }
     public ushort FirstYear => data.EntriesByYear.Keys.Min();
+    public ushort? PreviousYear
+    {
+        get
+        {
+            var foo = Years.Skip(1).Zip(Years).ToDictionary();
+            if (foo.TryGetValue(Year, out var previousYear))
+                return previousYear;
+            return null;
+        }
+    }
+
     public ushort LastYear => data.EntriesByYear.Keys.Max();
     public IReadOnlyCollection<ushort> Years =>
         [.. data.EntriesByYear.Keys.OrderBy(y => y)];

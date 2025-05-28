@@ -10,10 +10,10 @@
 
 <nav aria-label="Year navigation">
     <ul class="pagination">
-        @if (Model.Year > Model.FirstYear)
+        @if (Model.PreviousYear is { })
         {
             <li class="page-item">
-                <a class="page-link" asp-page="/Years" asp-route-year="@(Model.Year - 1)">&laquo;&nbsp;Previous</a>
+                <a class="page-link" asp-page="/Years" asp-route-year="@(Model.PreviousYear)">&laquo;&nbsp;Previous</a>
             </li>
         }
         else
