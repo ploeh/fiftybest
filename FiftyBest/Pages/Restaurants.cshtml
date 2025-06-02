@@ -19,7 +19,7 @@
         @foreach (var ranking in Model.Rankings)
         {
             <tr>
-                <td>@ranking.Year</td>
+                <td><a asp-page="/Years" asp-route-year="@ranking.Year">@ranking.Year</a></td>
                 <td>@ranking.Rank</td>
             </tr>
         }
