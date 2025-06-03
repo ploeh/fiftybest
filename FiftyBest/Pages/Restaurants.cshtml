@@ -5,7 +5,7 @@
 
 <div class="text-center">
     <h1 class="display-4">@Model.Name</h1>
-    <p>@Model.City, @Model.Country</p>
+    <p><a asp-page="/Cities" asp-route-country="@Model.Country" asp-route-city="@Model.City">@Model.City</a>, @Model.Country</p>
 </div>
 
 <table class="table">
