@@ -61,7 +61,7 @@
                 <td>@entry.Rank</td>
                 <td><a asp-page="/Restaurants" asp-route-country="@entry.Country" asp-route-city="@entry.City" asp-route-name="@entry.Name">@entry.Name</a></td>
                 <td><a asp-page="/Cities" asp-route-country="@entry.Country" asp-route-city="@entry.City">@entry.City</a></td>
-                <td>@entry.Country</td>
+                <td><a asp-page="/Countries" asp-route-country="@entry.Country">@entry.Country</a></td>
             </tr>
         }
     </tbody>
