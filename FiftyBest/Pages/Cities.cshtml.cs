@@ -9,21 +9,21 @@ public sealed class CitiesModel(FiftyBestData data) : PageModel
     public string? City { get; private set; }
     public IReadOnlyCollection<Restaurant> Restaurants { get; private set; } =
         [];
-    public IReadOnlyCollection<(string Country, string City)> Cities =>
-        data.Cities
-            .Select(kvp => (kvp.Value.Country, City : kvp.Key))
-            .OrderBy(t => t.City)
-            .ReadOnly();
+    public IReadOnlyCollection<CityId> Cities => data.Cities.Keys.ReadOnly();
 
     public void OnGet(string? country, string? city)
     {
+        if (country is null || city is null)
+            return;
+
         // Look up the city based on the parameters, so as to avoid cross-site
         // scripting attacks. DON'T TRUST INPUT.
-        if (city is { } && data.Cities.TryGetValue(city, out var restaurants))
+        var id = new CityId(country, city);
+        if (city is { } && data.Cities.TryGetValue(id, out var restaurants))
         {
-            Country = restaurants.Country;
-            City = city;
-            Restaurants = restaurants.Item2.DistinctBy(r => r.Name).ReadOnly();
+            Country = id.Country;
+            City = id.City;
+            Restaurants = restaurants.DistinctBy(r => r.Name).ReadOnly();
         }
     }
 }
