@@ -1,0 +1,27 @@
+﻿@page "{country?}"
+@model Ploeh.FiftyBest.Pages.CountriesModel
+@{
+}
+
+<div class="text-center">
+    @if (Model.Country is null)
+    {
+        <h1 class="display-4">Countries</h1>
+        @foreach (var c in Model.Countries)
+        {
+            <p>
+                <a asp-page="/Countries" asp-route-country="@c">@c</a>
+            </p>
+        }
+    }
+    else
+    {
+        <hi class="display-4">@Model.Country</hi>
+        @foreach (var c in Model.Cities)
+        {
+            <p>
+                <a asp-page="/Cities" asp-route-country="@Model.Country" asp-route-city="@c">@c</a>
+            </p>
+        }
+    }
+</div>

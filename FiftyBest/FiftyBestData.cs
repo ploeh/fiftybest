@@ -7,6 +7,7 @@ public sealed class FiftyBestData
     public IReadOnlyDictionary<ushort, IReadOnlyCollection<FiftyBestEntry>> EntriesByYear { get; }
     public IReadOnlyDictionary<RestaurantId, IReadOnlyCollection<Ranking>> Restaurants { get; }
     public IReadOnlyDictionary<CityId, IReadOnlyCollection<Restaurant>> Cities { get; }
+    public IReadOnlyDictionary<string, IReadOnlyCollection<string>> Countries { get; }
 
     public FiftyBestData(
         IReadOnlyDictionary<ushort, IReadOnlyCollection<FiftyBestEntry>> entriesByYear)
@@ -27,7 +28,7 @@ public sealed class FiftyBestData
                 g.OrderBy(t => t.Year).ReadOnly());
         Restaurants = rs.ToDictionary();
 
-        var cs =
+        var cts =
             from kvp in Restaurants
             from ranking in kvp.Value
             let k = kvp.Key.City
@@ -37,7 +38,14 @@ public sealed class FiftyBestData
             select KeyValuePair.Create(
                 g.Key,
                 g.OrderBy(r => r.Name).ReadOnly());
-        Cities = cs.ToDictionary();
+        Cities = cts.ToDictionary();
+
+        var cos =
+            from k in Cities.Keys.Distinct()
+            group k.Name by k.Country into g
+            orderby g.Key
+            select KeyValuePair.Create(g.Key, g.Order().ReadOnly());
+        Countries = cos.ToDictionary();
     }
 
     public static FiftyBestData Parse(
