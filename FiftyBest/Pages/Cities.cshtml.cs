@@ -7,6 +7,8 @@ public sealed class CitiesModel(FiftyBestData data) : PageModel
 {
     public string? Country { get; private set; }
     public string? City { get; private set; }
+    public IReadOnlyCollection<Restaurant> Restaurants { get; private set; } =
+        [];
     public IReadOnlyCollection<(string Country, string City)> Cities =>
         data.Cities
             .Select(kvp => (kvp.Value.Country, City : kvp.Key))
@@ -21,6 +23,7 @@ public sealed class CitiesModel(FiftyBestData data) : PageModel
         {
             Country = restaurants.Country;
             City = city;
+            Restaurants = restaurants.Item2.DistinctBy(r => r.Name).ReadOnly();
         }
     }
 }

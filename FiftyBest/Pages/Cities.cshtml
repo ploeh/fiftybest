@@ -16,5 +16,10 @@
     else
     {
         <h1 class="display-4">@Model.City</h1>
+
+        @foreach (var r in Model.Restaurants)
+        {
+            <p><a asp-page="/Restaurants" asp-route-country="@Model.Country" asp-route-city="@Model.City" asp-route-name="@r.Name">@r.Name</a></p>
+        }
     }
 </div>
