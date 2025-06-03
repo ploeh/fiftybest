@@ -22,7 +22,7 @@ public sealed class CitiesModel(FiftyBestData data) : PageModel
         if (city is { } && data.Cities.TryGetValue(id, out var restaurants))
         {
             Country = id.Country;
-            City = id.City;
+            City = id.Name;
             Restaurants = restaurants.DistinctBy(r => r.Name).ReadOnly();
         }
     }

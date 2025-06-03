@@ -5,7 +5,7 @@ namespace Ploeh.FiftyBest;
 public sealed class FiftyBestData
 {
     public IReadOnlyDictionary<ushort, IReadOnlyCollection<FiftyBestEntry>> EntriesByYear { get; }
-    public IReadOnlyDictionary<(string City, string Name), (string Country, IReadOnlyCollection<Ranking> Rankings)> Restaurants { get; }
+    public IReadOnlyDictionary<RestaurantId, IReadOnlyCollection<Ranking>> Restaurants { get; }
     public IReadOnlyDictionary<CityId, IReadOnlyCollection<Restaurant>> Cities { get; }
 
     public FiftyBestData(
@@ -17,21 +17,23 @@ public sealed class FiftyBestData
             from kvp in entriesByYear
             let year = kvp.Key
             from entry in kvp.Value
-            let k = (entry.Country, entry.City, entry.Name)
+            let k = new RestaurantId(
+                new CityId(entry.Country, entry.City),
+                entry.Name)
             let r = new Ranking(year, entry.Rank)
             group r by k into g
             select KeyValuePair.Create(
-                (g.Key.City, g.Key.Name),
-                (g.Key.Country, g.OrderBy(t => t.Year).ReadOnly()));
+                g.Key,
+                g.OrderBy(t => t.Year).ReadOnly());
         Restaurants = rs.ToDictionary();
 
         var cs =
             from kvp in Restaurants
-            from ranking in kvp.Value.Rankings
-            let k = new CityId(kvp.Value.Country, kvp.Key.City)
-            let v = new Restaurant(kvp.Key.Name, kvp.Value.Rankings)
+            from ranking in kvp.Value
+            let k = kvp.Key.City
+            let v = new Restaurant(kvp.Key.Name, kvp.Value)
             group v by k into g
-            orderby g.Key.City
+            orderby g.Key.Name
             select KeyValuePair.Create(
                 g.Key,
                 g.OrderBy(r => r.Name).ReadOnly());

@@ -8,9 +8,9 @@
     {
         <h1 class="display-4">Cities</h1>
 
-        @foreach (var t in Model.Cities)
+        @foreach (var cid in Model.Cities)
         {
-            <p><a asp-page="/Cities" asp-route-country="@t.Country" asp-route-city="@t.City">@t.City</a></p>
+            <p><a asp-page="/Cities" asp-route-country="@cid.Country" asp-route-city="@cid.Name">@cid.Name</a></p>
         }
     }
     else

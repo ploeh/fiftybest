@@ -16,12 +16,13 @@ public class RestaurantsModel(FiftyBestData data) : PageModel
         name = HttpUtility.UrlDecode(name);
         // Look up the restaurant based on the parameters, so as to avoid
         // cross-site scripting attacks. DON'T TRUST INPUT!
-        if (data.Restaurants.TryGetValue((city, name), out var rankings))
+        var id = new RestaurantId(new CityId(country, city), name);
+        if (data.Restaurants.TryGetValue(id, out var rankings))
         {
-            Country = rankings.Country;
+            Country = country;
             City = city;
             Name = name;
-            Rankings = rankings.Rankings;
+            Rankings = rankings;
         }
         else
         {

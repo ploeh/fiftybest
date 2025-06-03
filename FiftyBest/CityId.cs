@@ -1,3 +1,3 @@
 ﻿namespace Ploeh.FiftyBest;
 
-public sealed record CityId(string Country, string City);
+public sealed record CityId(string Country, string Name);
