@@ -4,5 +4,17 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">@Model.City</h1>
+    @if (Model.City is null)
+    {
+        <h1 class="display-4">Cities</h1>
+
+        @foreach (var t in Model.Cities)
+        {
+            <p><a asp-page="/Cities" asp-route-country="@t.Country" asp-route-city="@t.City">@t.City</a></p>
+        }
+    }
+    else
+    {
+        <h1 class="display-4">@Model.City</h1>
+    }
 </div>
