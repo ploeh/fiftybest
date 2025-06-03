@@ -8,7 +8,10 @@ public sealed class CitiesModel(FiftyBestData data) : PageModel
     public string? Country { get; private set; }
     public string? City { get; private set; }
     public IReadOnlyCollection<(string Country, string City)> Cities =>
-        data.Cities.Select(kvp => (kvp.Value.Country, kvp.Key)).ReadOnly();
+        data.Cities
+            .Select(kvp => (kvp.Value.Country, City : kvp.Key))
+            .OrderBy(t => t.City)
+            .ReadOnly();
 
     public void OnGet(string? country, string? city)
     {
