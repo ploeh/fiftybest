@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Web;
 
 namespace Ploeh.FiftyBest.Pages;
 
@@ -12,6 +13,7 @@ public class RestaurantsModel(FiftyBestData data) : PageModel
 
     public void OnGet(string country, string city, string name)
     {
+        name = HttpUtility.UrlDecode(name);
         // Look up the restaurant based on the parameters, so as to avoid
         // cross-site scripting attacks. DON'T TRUST INPUT!
         if (data.Restaurants.TryGetValue((city, name), out var rankings))
