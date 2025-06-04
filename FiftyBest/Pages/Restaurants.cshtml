@@ -1,4 +1,4 @@
-﻿@page "{country}/{city}/{name}"
+﻿@page "{country?}/{city?}/{name?}"
 @model Ploeh.FiftyBest.Pages.RestaurantsModel
 @{
 }
@@ -27,4 +27,14 @@
             }
         </tbody>
     </table>
+}
+else
+{
+    <div class="text-center">
+        <h1 class="display-4">Restaurants</h1>
+        @foreach (var restaurant in Model.Restaurants)
+        {
+            <p><a asp-page="/Restaurants" asp-route-country="@restaurant.City.Country" asp-route-city="@restaurant.City.Name" asp-route-name="@restaurant.Name.ToUrlSegment()">@restaurant.Name.Name</a></p>
+        }
+    </div>
 }

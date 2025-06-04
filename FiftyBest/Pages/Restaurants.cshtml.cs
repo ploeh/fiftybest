@@ -10,9 +10,20 @@ public class RestaurantsModel(FiftyBestData data) : PageModel
     public string? City { get; private set; }
     public RestaurantName? Name { get; private set; }
     public IReadOnlyCollection<Ranking> Rankings { get; private set; } = [];
+    public IReadOnlyCollection<RestaurantId> Restaurants { get; private set; } =
+        [];
 
-    public void OnGet(string country, string city, string name)
+    public void OnGet(string? country, string? city, string? name)
     {
+        if (country is null || city is null || name is null)
+        {
+            Restaurants = data.Restaurants.Keys
+                .DistinctBy(r => r.Name)
+                .OrderBy(r => r.Name.Name)
+                .ReadOnly();
+            return;
+        }
+
         var rName = RestaurantName.FromUrlSegment(name);
         // Look up the restaurant based on the parameters, so as to avoid
         // cross-site scripting attacks. DON'T TRUST INPUT!
@@ -23,11 +34,6 @@ public class RestaurantsModel(FiftyBestData data) : PageModel
             City = city;
             Name = rName;
             Rankings = rankings;
-        }
-        else
-        {
-            // If the restaurant is not found, return a 404 Not Found error.
-            Response.StatusCode = 404;
         }
     }
 }
