@@ -1,5 +1,5 @@
 ﻿namespace Ploeh.FiftyBest;
 
 public sealed record Restaurant(
-    string Name,
+    RestaurantName Name,
     IReadOnlyCollection<Ranking> Rankings);

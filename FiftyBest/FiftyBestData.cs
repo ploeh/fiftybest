@@ -37,7 +37,7 @@ public sealed class FiftyBestData
             orderby g.Key.Name
             select KeyValuePair.Create(
                 g.Key,
-                g.OrderBy(r => r.Name).ReadOnly());
+                g.OrderBy(r => r.Name.Name).ReadOnly());
         Cities = cts.ToDictionary();
 
         var cos =

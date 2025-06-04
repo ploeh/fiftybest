@@ -3,25 +3,28 @@
 @{
 }
 
-<div class="text-center">
-    <h1 class="display-4">@Model.Name</h1>
-    <p><a asp-page="/Cities" asp-route-country="@Model.Country" asp-route-city="@Model.City">@Model.City</a>, <a asp-page="/Countries" asp-route-country="@Model.Country">@Model.Country</a></p>
-</div>
+@if (Model.Name is {})
+{
+    <div class="text-center">
+        <h1 class="display-4">@Model.Name.Name</h1>
+        <p><a asp-page="/Cities" asp-route-country="@Model.Country" asp-route-city="@Model.City">@Model.City</a>, <a asp-page="/Countries" asp-route-country="@Model.Country">@Model.Country</a></p>
+    </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Year</th>
-            <th>Rank</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var ranking in Model.Rankings)
-        {
+    <table class="table">
+        <thead>
             <tr>
-                <td><a asp-page="/Years" asp-route-year="@ranking.Year">@ranking.Year</a></td>
-                <td>@ranking.Rank</td>
+                <th>Year</th>
+                <th>Rank</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var ranking in Model.Rankings)
+            {
+                <tr>
+                    <td><a asp-page="/Years" asp-route-year="@ranking.Year">@ranking.Year</a></td>
+                    <td>@ranking.Rank</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

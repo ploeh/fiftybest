@@ -8,20 +8,20 @@ public class RestaurantsModel(FiftyBestData data) : PageModel
 {
     public string? Country { get; private set; }
     public string? City { get; private set; }
-    public string? Name { get; private set; }
+    public RestaurantName? Name { get; private set; }
     public IReadOnlyCollection<Ranking> Rankings { get; private set; } = [];
 
     public void OnGet(string country, string city, string name)
     {
-        name = HttpUtility.UrlDecode(name);
+        var rName = RestaurantName.FromUrlSegment(name);
         // Look up the restaurant based on the parameters, so as to avoid
         // cross-site scripting attacks. DON'T TRUST INPUT!
-        var id = new RestaurantId(new CityId(country, city), name);
+        var id = new RestaurantId(new CityId(country, city), rName);
         if (data.Restaurants.TryGetValue(id, out var rankings))
         {
             Country = country;
             City = city;
-            Name = name;
+            Name = rName;
             Rankings = rankings;
         }
         else

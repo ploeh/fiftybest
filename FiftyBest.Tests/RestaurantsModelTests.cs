@@ -11,15 +11,15 @@ public sealed class RestaurantsModelTests
             { 2013, [
                 new FiftyBestEntry(
                     12,
-                    "Frantzén/Lindeberg",
+                    new RestaurantName("Frantzén/Lindeberg"),
                     "Stockholm",
                     "Sweden")] }
         });
         var sut = new RestaurantsModel(data);
 
         // Notice that the restaurant name is URL-encoded
-        sut.OnGet("Sweden", "Stockholm", "Frantzén%2FLindeberg");
+        sut.OnGet("Sweden", "Stockholm", "Frantzén__slash__Lindeberg");
 
-        Assert.Equal("Frantzén/Lindeberg", sut.Name);
+        Assert.Equal("Frantzén/Lindeberg", sut.Name?.Name);
     }
 }
