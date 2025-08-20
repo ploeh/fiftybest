@@ -1,6 +1,6 @@
 # FiftyBest - World's 50 Best Restaurants Rankings
 
-FiftyBest is an ASP.NET Core web application that displays "The World's 50 Best Restaurants" rankings data from various years (2002-2025). The application provides interactive views to browse restaurants by year, country, city, and name, with detailed ranking history for each restaurant.
+FiftyBest is an ASP.NET Core web application that displays "The World's 50 Best Restaurants" rankings data from 2002 to the current year (note: no data for 2020 due to COVID-19 lockdowns). The application provides interactive views to browse restaurants by year, country, city, and name, with detailed ranking history for each restaurant.
 
 Always reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.
 
@@ -47,15 +47,23 @@ Required test scenarios:
 ### Build Validation
 Always run these commands before committing changes:
 - `dotnet build --configuration Release` -- Ensures code compiles without warnings (TreatWarningsAsErrors=True)
-- `dotnet test --configuration Release --no-build` -- Ensures all 7 tests pass
+- `dotnet test --configuration Release --no-build` -- Ensures all tests pass
 - The GitHub Actions workflow (.github/workflows/master_fiftybest.yml) will fail if warnings exist
+
+## Code Quality Standards
+
+### Unit Testing Requirements
+Contributors must add unit tests when adding code with a cyclomatic complexity higher than 1. This ensures that complex logic is properly tested and maintainable.
+
+### Code Style Guidelines
+Contributors should maintain 80 characters line width unless syntactically impossible. This improves code readability and consistency across the codebase.
 
 ## Architecture and Key Components
 
 ### Project Structure
 - **FiftyBest/**: Main web application (ASP.NET Core 9.0 Razor Pages)
 - **FiftyBest.Tests/**: xUnit test project
-- **FiftyBest/Data/**: CSV files containing restaurant rankings by year (2002-2025)
+- **FiftyBest/Data/**: CSV files containing restaurant rankings by year
 
 ### Core Classes
 - `FiftyBestData.cs`: Loads and processes restaurant ranking data from CSV files
