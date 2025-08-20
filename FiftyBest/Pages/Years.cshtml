@@ -9,41 +9,41 @@
 </div>
 
 <nav aria-label="Year navigation">
-    <ul class="pagination">
+    <div class="d-flex align-items-center justify-content-center gap-3">
         @if (Model.PreviousYear is { })
         {
-            <li class="page-item">
-                <a class="page-link" asp-page="/Years" asp-route-year="@(Model.PreviousYear)">&laquo;&nbsp;Previous</a>
-            </li>
+            <a class="btn btn-outline-primary" asp-page="/Years" asp-route-year="@(Model.PreviousYear)">&laquo;&nbsp;Previous</a>
         }
         else
         {
-            <li class="page-item disabled">
-                <span class="page-link">&laquo;&nbsp;Previous</span>
-            </li>
+            <span class="btn btn-outline-secondary disabled">&laquo;&nbsp;Previous</span>
         }
 
-        @foreach (var year in Model.Years)
-        {
-            <li class="page-item @(year == Model.Year ? "active" : "")">
-                <a class="page-link" asp-page="/Years" asp-route-year="@year">@year</a>
-            </li>
-        }
+        <select class="form-select" style="width: auto;" id="yearSelector" onchange="navigateToYear(this.value)">
+            @foreach (var year in Model.Years)
+            {
+                <option value="@year" selected="@(year == Model.Year)">@year</option>
+            }
+        </select>
 
         @if (Model.NextYear is {})
         {
-            <li class="page-item">
-                <a class="page-link" asp-page="/Years" asp-route-year="@(Model.NextYear)">Next&nbsp;&raquo;</a>
-            </li>
+            <a class="btn btn-outline-primary" asp-page="/Years" asp-route-year="@(Model.NextYear)">Next&nbsp;&raquo;</a>
         }
         else
         {
-            <li class="page-item disabled">
-                <span class="page-link">Next&nbsp;&raquo;</span>
-            </li>
+            <span class="btn btn-outline-secondary disabled">Next&nbsp;&raquo;</span>
         }
-    </ul>
+    </div>
 </nav>
+
+<script>
+function navigateToYear(year) {
+    if (year) {
+        window.location.href = '/Years/' + year;
+    }
+}
+</script>
 
 <table class="table">
     <thead>
