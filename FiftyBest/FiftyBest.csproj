@@ -24,4 +24,8 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AspNet.Security.OAuth.GitHub" Version="9.0.0" />
+  </ItemGroup>
+
 </Project>
