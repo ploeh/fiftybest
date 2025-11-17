@@ -15,10 +15,16 @@ builder.Services
     .AddCookie("Cookies")
     .AddGitHub(options =>
     {
-        options.ClientId =
-            builder.Configuration["Authentication:GitHub:ClientId"] ?? "";
-        options.ClientSecret =
-            builder.Configuration["Authentication:GitHub:ClientSecret"] ?? "";
+        var clientId =
+            builder.Configuration["Authentication:GitHub:ClientId"];
+        var clientSecret =
+            builder.Configuration["Authentication:GitHub:ClientSecret"];
+        
+        options.ClientId = 
+            string.IsNullOrWhiteSpace(clientId) ? "dummy-client-id" : clientId;
+        options.ClientSecret = 
+            string.IsNullOrWhiteSpace(clientSecret) ? 
+                "dummy-client-secret" : clientSecret;
     });
 
 var app = builder.Build();
