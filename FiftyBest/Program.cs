@@ -19,12 +19,16 @@ builder.Services
             builder.Configuration["Authentication:GitHub:ClientId"];
         var clientSecret =
             builder.Configuration["Authentication:GitHub:ClientSecret"];
-        
-        options.ClientId = 
-            string.IsNullOrWhiteSpace(clientId) ? "dummy-client-id" : clientId;
-        options.ClientSecret = 
-            string.IsNullOrWhiteSpace(clientSecret) ? 
-                "dummy-client-secret" : clientSecret;
+
+        if (string.IsNullOrWhiteSpace(clientId))
+            throw new InvalidOperationException(
+                "GitHub ClientId is not configured.");
+        if (string.IsNullOrWhiteSpace(clientSecret))
+            throw new InvalidOperationException(
+                "GitHub ClientSecret is not configured.");
+
+        options.ClientId = clientId;
+        options.ClientSecret = clientSecret;
     });
 
 var app = builder.Build();
