@@ -1,11 +1,6 @@
 using System.Net;
-using System.Security.Claims;
-using System.Text.Encodings.Web;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace Ploeh.FiftyBest.Tests;
 
@@ -24,9 +19,10 @@ public sealed class AuthenticationIntegrationTests :
                 config.AddInMemoryCollection(
                     new Dictionary<string, string?>
                     {
-                        ["Authentication:GitHub:ClientId"] = "test-client-id",
+                        ["Authentication:GitHub:ClientId"] =
+                            "fake-test-client-id",
                         ["Authentication:GitHub:ClientSecret"] =
-                            "test-client-secret"
+                            "fake-test-client-secret"
                     });
             });
         });
@@ -35,46 +31,28 @@ public sealed class AuthenticationIntegrationTests :
     [Fact]
     public async Task LoginRedirectsToGitHubAuthenticationScheme()
     {
-        var client = factory.CreateClient(
-            new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false
-            });
+        var client = CreateClient();
 
         var response = await client.GetAsync("/Login");
 
-        Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
-        var location = response.Headers.Location?.ToString();
-        Assert.NotNull(location);
-        Assert.StartsWith("https://github.com/login/oauth/authorize", location);
+        AssertRedirectsToGitHub(response);
     }
 
     [Fact]
     public async Task LoginWithReturnUrlRedirectsToCorrectUrl()
     {
-        var client = factory.CreateClient(
-            new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false
-            });
+        var client = CreateClient();
 
         var response = await client.GetAsync("/Login?returnUrl=/Years");
 
-        Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
-        var location = response.Headers.Location?.ToString();
-        Assert.NotNull(location);
-        Assert.StartsWith("https://github.com/login/oauth/authorize", location);
-        Assert.Contains("redirect_uri=", location);
+        AssertRedirectsToGitHub(response);
+        Assert.Contains("redirect_uri=", response.Headers.Location?.ToString());
     }
 
     [Fact]
     public async Task LogoutReturnsLogoutPage()
     {
-        var client = factory.CreateClient(
-            new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false
-            });
+        var client = CreateClient();
 
         var response = await client.GetAsync("/Logout");
 
@@ -86,29 +64,18 @@ public sealed class AuthenticationIntegrationTests :
             content);
     }
 
-    private sealed class TestAuthHandler : AuthenticationHandler<
-        AuthenticationSchemeOptions>
-    {
-        public TestAuthHandler(
-            IOptionsMonitor<AuthenticationSchemeOptions> options,
-            ILoggerFactory logger,
-            UrlEncoder encoder)
-            : base(options, logger, encoder)
-        {
-        }
-
-        protected override Task<AuthenticateResult> HandleAuthenticateAsync()
-        {
-            var claims = new[]
+    private HttpClient CreateClient() =>
+        factory.CreateClient(
+            new WebApplicationFactoryClientOptions
             {
-                new Claim(ClaimTypes.Name, "Test User"),
-                new Claim(ClaimTypes.NameIdentifier, "test-user-id")
-            };
-            var identity = new ClaimsIdentity(claims, "TestAuth");
-            var principal = new ClaimsPrincipal(identity);
-            var ticket = new AuthenticationTicket(principal, "TestAuth");
+                AllowAutoRedirect = false
+            });
 
-            return Task.FromResult(AuthenticateResult.Success(ticket));
-        }
+    private static void AssertRedirectsToGitHub(HttpResponseMessage response)
+    {
+        Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+        var location = response.Headers.Location?.ToString();
+        Assert.NotNull(location);
+        Assert.StartsWith("https://github.com/login/oauth/authorize", location);
     }
 }
