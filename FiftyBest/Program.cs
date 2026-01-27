@@ -49,3 +49,6 @@ app.MapRazorPages()
    .WithStaticAssets();
 
 app.Run();
+
+// Make the implicit Program class accessible to tests
+public partial class Program { }
