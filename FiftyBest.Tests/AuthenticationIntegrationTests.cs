@@ -1,8 +1,14 @@
 using System.Net;
 using System.Security.Claims;
+using System.Text.Encodings.Web;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Ploeh.FiftyBest.Tests;
 
@@ -58,29 +64,46 @@ public sealed class AuthenticationIntegrationTests :
         // After logout, the menu should show "Login" instead of "Logout",
         // but currently it still shows the user as logged in.
         
-        var client = factory.CreateClient(
+        // Create a factory with a test authentication handler that
+        // automatically authenticates requests
+        var testFactory = factory.WithWebHostBuilder(builder =>
+        {
+            builder.ConfigureTestServices(services =>
+            {
+                // Add a test authentication handler that signs in users
+                services.AddAuthentication(options =>
+                    {
+                        options.DefaultAuthenticateScheme = 
+                            TestAuthHandler.SchemeName;
+                        options.DefaultChallengeScheme = 
+                            TestAuthHandler.SchemeName;
+                    })
+                    .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
+                        TestAuthHandler.SchemeName,
+                        options => { });
+            });
+        });
+
+        var client = testFactory.CreateClient(
             new WebApplicationFactoryClientOptions
             {
                 AllowAutoRedirect = false,
                 HandleCookies = true
             });
 
-        // Step 1: Sign in using the test page
-        var signinResponse = await client.GetAsync("/TestSignIn?userName=TestUser");
-        Assert.Equal(HttpStatusCode.OK, signinResponse.StatusCode);
-
-        // Step 2: Verify we're logged in by checking the home page
+        // Step 1: Verify we're logged in by checking the home page
+        // The TestAuthHandler automatically authenticates all requests
         var homeResponse = await client.GetAsync("/");
         var homeContent = await homeResponse.Content.ReadAsStringAsync();
         Assert.Contains("Hello, TestUser", homeContent);
         Assert.Contains("Logout</a>", homeContent);
         Assert.DoesNotContain("Login</a>", homeContent);
 
-        // Step 3: Call logout
+        // Step 2: Call logout
         var logoutResponse = await client.GetAsync("/Logout");
         Assert.Equal(HttpStatusCode.OK, logoutResponse.StatusCode);
 
-        // Step 4: Verify the logout page shows correct authentication status
+        // Step 3: Verify the logout page shows correct authentication status
         var logoutContent = await logoutResponse.Content.ReadAsStringAsync();
         Assert.Contains("Logged out", logoutContent);
         Assert.Contains(
@@ -90,7 +113,7 @@ public sealed class AuthenticationIntegrationTests :
         Assert.Contains("Login</a>", logoutContent);
         Assert.DoesNotContain("Hello, TestUser", logoutContent);
 
-        // Step 5: Verify subsequent requests show unauthenticated state
+        // Step 4: Verify subsequent requests show unauthenticated state
         var afterLogoutResponse = await client.GetAsync("/");
         var afterLogoutContent =
             await afterLogoutResponse.Content.ReadAsStringAsync();
@@ -111,5 +134,33 @@ public sealed class AuthenticationIntegrationTests :
         var location = response.Headers.Location?.ToString();
         Assert.NotNull(location);
         Assert.StartsWith("https://github.com/login/oauth/authorize", location);
+    }
+
+    private sealed class TestAuthHandler : AuthenticationHandler<
+        AuthenticationSchemeOptions>
+    {
+        public const string SchemeName = "TestScheme";
+
+        public TestAuthHandler(
+            IOptionsMonitor<AuthenticationSchemeOptions> options,
+            ILoggerFactory logger,
+            UrlEncoder encoder)
+            : base(options, logger, encoder)
+        {
+        }
+
+        protected override Task<AuthenticateResult> HandleAuthenticateAsync()
+        {
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.Name, "TestUser"),
+                new Claim(ClaimTypes.NameIdentifier, "test-user-id")
+            };
+            var identity = new ClaimsIdentity(claims, SchemeName);
+            var principal = new ClaimsPrincipal(identity);
+            var ticket = new AuthenticationTicket(principal, SchemeName);
+
+            return Task.FromResult(AuthenticateResult.Success(ticket));
+        }
     }
 }
