@@ -10,7 +10,7 @@ namespace Ploeh.FiftyBest.Tests;
 public sealed class LogoutModelTests
 {
     [Fact]
-    public async Task OnGetAsyncReturnsPageResult()
+    public async Task OnGetAsyncReturnsRedirectToPageResult()
     {
         var authServiceMock = new Mock<IAuthenticationService>();
         authServiceMock
@@ -37,7 +37,8 @@ public sealed class LogoutModelTests
 
         var result = await sut.OnGetAsync();
 
-        Assert.IsType<PageResult>(result);
+        var redirect = Assert.IsType<RedirectToPageResult>(result);
+        Assert.Equal("/Index", redirect.PageName);
     }
 
     [Fact]
