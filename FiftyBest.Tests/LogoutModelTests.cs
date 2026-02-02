@@ -14,13 +14,6 @@ public sealed class LogoutModelTests
     public async Task OnGetAsync()
     {
         var authServiceMock = new Mock<IAuthenticationService>();
-        authServiceMock
-            .Setup(x => x.SignOutAsync(
-                It.IsAny<HttpContext>(),
-                "Cookies",
-                It.IsAny<AuthenticationProperties>()))
-            .Returns(Task.CompletedTask)
-            .Verifiable();
 
         var services = new ServiceCollection();
         services.AddSingleton(authServiceMock.Object);
