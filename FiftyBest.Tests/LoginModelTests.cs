@@ -1,8 +1,4 @@
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Moq;
 using Ploeh.FiftyBest.Pages;
 
 namespace Ploeh.FiftyBest.Tests;
