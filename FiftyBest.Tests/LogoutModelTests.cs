@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Ploeh.FiftyBest.Pages;
 
@@ -21,14 +22,12 @@ public sealed class LogoutModelTests
             .Returns(Task.CompletedTask)
             .Verifiable();
 
-        var serviceProviderMock = new Mock<IServiceProvider>();
-        serviceProviderMock
-            .Setup(x => x.GetService(typeof(IAuthenticationService)))
-            .Returns(authServiceMock.Object);
+        var services = new ServiceCollection();
+        services.AddSingleton(authServiceMock.Object);
 
         var httpContext = new DefaultHttpContext
         {
-            RequestServices = serviceProviderMock.Object
+            RequestServices = services.BuildServiceProvider()
         };
 
         var sut = new LogoutModel
