@@ -6,9 +6,9 @@ namespace Ploeh.FiftyBest.Pages;
 
 public class LogoutModel : PageModel
 {
-    public async Task<IActionResult> OnGetAsync()
+    public async Task<IActionResult> OnGetAsync(string returnUrl = "/")
     {
         await HttpContext.SignOutAsync("Cookies");
-        return Page();
+        return Redirect(returnUrl);
     }
 }

@@ -26,9 +26,10 @@ public sealed class LogoutModelTests
             PageContext = new PageContext { HttpContext = httpContext }
         };
 
-        var result = await sut.OnGetAsync();
+        var result = await sut.OnGetAsync("/Countries/Denmark");
 
-        Assert.IsType<PageResult>(result);
+        var redirect = Assert.IsAssignableFrom<RedirectResult>(result);
+        Assert.Equal("/Countries/Denmark", redirect.Url);
         Assert.Contains(
             new SpyAuthenticationService.SignOut(
                 httpContext,
