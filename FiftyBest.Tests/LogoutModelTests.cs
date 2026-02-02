@@ -33,9 +33,9 @@ public sealed class LogoutModelTests
         Assert.IsType<PageResult>(result);
         authServiceMock.Verify(
             x => x.SignOutAsync(
-                It.IsAny<HttpContext>(),
+                httpContext,
                 "Cookies",
-                It.IsAny<AuthenticationProperties>()),
+                null),
             Times.Once);
     }
 }
