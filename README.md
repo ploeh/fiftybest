@@ -8,6 +8,8 @@ year, country, city, or name.
 The database runs entirely in server-side memory, due to its small size. At
 startup, the database is loaded from CSV files.
 
+An instance is running on https://fiftybest.fnaah.dk/.
+
 ## Testing
 Most views are fairly simple and contains little logic worth testing. Thus, the
 test coverage is currently limited to the few areas in which more substantial
