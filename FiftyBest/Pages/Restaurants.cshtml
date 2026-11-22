@@ -5,10 +5,68 @@
 
 @if (Model.Name is {})
 {
+    // The graph is 640 wide and 300 high. The plot area spans from 40 to
+    // 620 horizontally, and from 20 to 265 vertically. All coordinates are
+    // integers, because the decimal separator of fractional numbers
+    // depends on the culture of the server.
+    var firstYear = Model.Rankings.Min(r => r.Year);
+    var lastYear = Model.Rankings.Max(r => r.Year);
+
+    // The years to label. Label every year when there are few, and
+    // every second or third when there are many, so that the labels
+    // don't overlap.
+    var yearStep = (lastYear - firstYear) / 10 + 1;
+    var years = Enumerable
+        .Range(firstYear, lastYear - firstYear + 1)
+        .Where(year => (year - firstYear) % yearStep == 0);
+
+    // The ranks to label.
+    int[] ranks = [1, 10, 20, 30, 40, 50];
+
+    // Divide the width evenly among the years, plus an empty year on
+    // each side, so that no point sits on the edge. This also places a
+    // single year in the middle, instead of dividing by zero.
+    Func<int, int> x = year =>
+        40 + (year - firstYear + 1) * 580 / (lastYear - firstYear + 2);
+
+    // Rank 1 is at the top, and each rank is 5 further down.
+    Func<int, int> y = rank => 20 + (rank - 1) * 5;
+
     <div class="text-center">
         <h1 class="display-4">@Model.Name.Name</h1>
         <p><a asp-page="/Cities" asp-route-country="@Model.Country" asp-route-city="@Model.City">@Model.City</a>, <a asp-page="/Countries" asp-route-country="@Model.Country">@Model.Country</a></p>
     </div>
+
+    <svg class="d-block w-100 mx-auto mb-3" style="max-width: 640px;" viewBox="0 0 640 300" role="img" aria-label="Rank by year">
+        <g class="text-secondary" font-size="14">
+            @foreach (var rank in ranks)
+            {
+                <g>
+                    <line x1="40" y1="@y(rank)" x2="620" y2="@y(rank)" stroke="currentColor" stroke-opacity="0.25" />
+                    <text x="32" y="@y(rank)" dy="0.35em" text-anchor="end" fill="currentColor">@rank</text>
+                </g>
+            }
+            @foreach (var year in years)
+            {
+                <g>
+                    <line x1="@x(year)" y1="20" x2="@x(year)" y2="265" stroke="currentColor" stroke-opacity="0.25" />
+                    <text x="@x(year)" y="285" text-anchor="middle" fill="currentColor">@year</text>
+                </g>
+            }
+        </g>
+        <g class="text-primary">
+            @foreach (var streak in Model.Streaks)
+            {
+                <polyline points="@string.Join(" ", streak.Select(r => $"{x(r.Year)},{y(r.Rank)}"))" fill="none" stroke="currentColor" stroke-width="2" />
+            }
+            @foreach (var ranking in Model.Rankings)
+            {
+                <circle cx="@x(ranking.Year)" cy="@y(ranking.Rank)" r="4" fill="currentColor">
+                    <title>@ranking.Year: @ranking.Rank</title>
+                </circle>
+            }
+        </g>
+    </svg>
 
     <table class="table">
         <thead>
