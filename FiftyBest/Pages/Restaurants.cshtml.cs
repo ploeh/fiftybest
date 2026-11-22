@@ -10,6 +10,8 @@ public class RestaurantsModel(FiftyBestData data) : PageModel
     public string? City { get; private set; }
     public RestaurantName? Name { get; private set; }
     public IReadOnlyCollection<Ranking> Rankings { get; private set; } = [];
+    public IReadOnlyCollection<IReadOnlyCollection<Ranking>> Streaks { get; private set; } =
+        [];
     public IReadOnlyCollection<RestaurantId> Restaurants { get; private set; } =
         [];
 
@@ -34,6 +36,19 @@ public class RestaurantsModel(FiftyBestData data) : PageModel
             City = city;
             Name = rName;
             Rankings = rankings;
+
+            // A streak is a run of rankings from consecutive lists. Since
+            // the rankings are ordered by year, the position of a ranking's
+            // year among all years, less the position of the ranking
+            // itself, stays the same for as long as a streak lasts.
+            var years = data.EntriesByYear.Keys.Order().ToList();
+            var ss =
+                from t in rankings.Index()
+                let r = t.Item
+                let lead = years.IndexOf(r.Year) - t.Index
+                group r by lead into g
+                select g.ReadOnly();
+            Streaks = ss.ReadOnly();
         }
     }
 }
