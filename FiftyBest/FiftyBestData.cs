@@ -91,7 +91,7 @@ public sealed class FiftyBestData
         IReadOnlyCollection<string>? aliases)
     {
         if (aliases is null || aliases.Count == 0)
-            return new Dictionary<string, string>();
+            return [];
         return aliases
             .Select(line => line.Split(
                 ',',
