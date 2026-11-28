@@ -7,6 +7,10 @@
 {
     <div class="text-center">
         <h1 class="display-4">@Model.Name.Name</h1>
+        @if (Model.Aliases.Count > 0)
+        {
+            <p>@Model.Name.Name, AKA @string.Join(", ", Model.Aliases)</p>
+        }
         <p><a asp-page="/Cities" asp-route-country="@Model.Country" asp-route-city="@Model.City">@Model.City</a>, <a asp-page="/Countries" asp-route-country="@Model.Country">@Model.Country</a></p>
     </div>
 

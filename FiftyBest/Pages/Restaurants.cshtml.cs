@@ -9,6 +9,7 @@ public class RestaurantsModel(FiftyBestData data) : PageModel
     public string? Country { get; private set; }
     public string? City { get; private set; }
     public RestaurantName? Name { get; private set; }
+    public IReadOnlyCollection<string> Aliases { get; private set; } = [];
     public IReadOnlyCollection<Ranking> Rankings { get; private set; } = [];
     public IReadOnlyCollection<IReadOnlyCollection<Ranking>> Streaks { get; private set; } =
         [];
@@ -65,6 +66,11 @@ public class RestaurantsModel(FiftyBestData data) : PageModel
             Country = country;
             City = city;
             Name = rName;
+            Aliases = data.Aliases.TryGetValue(
+                rName.Name,
+                out var aliases)
+                ? aliases
+                : [];
             Rankings = rankings;
 
             // A streak is a run of rankings from consecutive lists. Since

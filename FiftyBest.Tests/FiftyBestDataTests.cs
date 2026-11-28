@@ -22,6 +22,40 @@ public sealed class FiftyBestDataTests
     }
 
     [Fact]
+    public void YearEntriesKeepListedNames()
+    {
+        var actual = FiftyBestData.Parse(
+            [
+                (2013, ["12,Frantzén/Lindeberg,Stockholm,Sweden"]),
+                (2019, ["16,Frantzén,Stockholm,Sweden"])
+            ],
+            ["Frantzén,Frantzén/Lindeberg,Restaurant Frantzén"]);
+
+        var e2013 = Assert.Single(actual.EntriesByYear[2013]);
+        Assert.Equal("Frantzén", e2013.Name.Name);
+        Assert.Equal("Frantzén/Lindeberg", e2013.ListedAs?.Name);
+        var e2019 = Assert.Single(actual.EntriesByYear[2019]);
+        Assert.Equal("Frantzén", e2019.Name.Name);
+        Assert.Null(e2019.ListedAs);
+    }
+
+    [Fact]
+    public void AliasesAreExposedByCanonicalName()
+    {
+        var actual = FiftyBestData.Parse(
+            [
+                (2013, ["12,Frantzén/Lindeberg,Stockholm,Sweden"])
+            ],
+            ["Frantzén,Frantzén/Lindeberg,Restaurant Frantzén"]);
+
+        var kvp = Assert.Single(actual.Aliases);
+        Assert.Equal("Frantzén", kvp.Key);
+        Assert.Equal(
+            ["Frantzén/Lindeberg", "Restaurant Frantzén"],
+            kvp.Value);
+    }
+
+    [Fact]
     public void LoadTakesAliasesFileIntoAccount()
     {
         var path = Path.Combine(

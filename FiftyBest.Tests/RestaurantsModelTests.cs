@@ -217,4 +217,36 @@ public sealed class RestaurantsModelTests
 
         Assert.Equal(265, sut.Y(50));
     }
+
+    [Fact]
+    public void RestaurantPageShowsAliases()
+    {
+        var data = FiftyBestData.Parse(
+            [
+                (2013, ["12,Frantzén/Lindeberg,Stockholm,Sweden"]),
+                (2019, ["16,Frantzén,Stockholm,Sweden"])
+            ],
+            ["Frantzén,Frantzén/Lindeberg,Restaurant Frantzén"]);
+        var sut = new RestaurantsModel(data);
+
+        sut.OnGet("Sweden", "Stockholm", "Frantzén");
+
+        Assert.Equal(
+            ["Frantzén/Lindeberg", "Restaurant Frantzén"],
+            sut.Aliases);
+    }
+
+    [Fact]
+    public void RestaurantPageWithoutAliasesShowsNone()
+    {
+        var data = FiftyBestData.Parse(
+            [
+                (2021, ["6,Frantzén,Stockholm,Sweden"])
+            ]);
+        var sut = new RestaurantsModel(data);
+
+        sut.OnGet("Sweden", "Stockholm", "Frantzén");
+
+        Assert.Empty(sut.Aliases);
+    }
 }
