@@ -49,12 +49,22 @@ public sealed class FiftyBestData
     }
 
     public static FiftyBestData Parse(
-        IReadOnlyCollection<(ushort Year, IReadOnlyCollection<string> Lines)> input)
+        IReadOnlyCollection<(ushort Year, IReadOnlyCollection<string> Lines)>
+            input,
+        IReadOnlyCollection<string>? aliases = null)
     {
+        var canonicalNames = CanonicalNames(aliases);
         var entriesByYear = input
             .Select(t => KeyValuePair.Create(
                 t.Year,
-                t.Lines.Select(FiftyBestEntry.Parse).ReadOnly()))
+                t.Lines
+                    .Select(FiftyBestEntry.Parse)
+                    .Select(e => canonicalNames.TryGetValue(
+                        e.Name.Name,
+                        out var canonical)
+                        ? e with { Name = new RestaurantName(canonical) }
+                        : e)
+                    .ReadOnly()))
             .ToDictionary();
         return new FiftyBestData(entriesByYear);
     }
@@ -69,6 +79,28 @@ public sealed class FiftyBestData
                     CultureInfo.InvariantCulture),
                 File.ReadAllLines(fileName).ReadOnly()))
             .ReadOnly();
-        return Parse(input);
+        var aliasPath = Path.Combine(path, "aliases.txt");
+        IReadOnlyCollection<string> aliases =
+            File.Exists(aliasPath)
+                ? File.ReadAllLines(aliasPath)
+                : [];
+        return Parse(input, aliases);
+    }
+
+    private static Dictionary<string, string> CanonicalNames(
+        IReadOnlyCollection<string>? aliases)
+    {
+        if (aliases is null || aliases.Count == 0)
+            return new Dictionary<string, string>();
+        return aliases
+            .Select(line => line.Split(
+                ',',
+                StringSplitOptions.TrimEntries |
+                StringSplitOptions.RemoveEmptyEntries))
+            .Where(parts => parts.Length > 1)
+            .SelectMany(parts => parts
+                .Skip(1)
+                .Select(alias => (alias, Canonical: parts[0])))
+            .ToDictionary(t => t.alias, t => t.Canonical);
     }
 }
