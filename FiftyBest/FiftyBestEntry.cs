@@ -6,7 +6,10 @@ public sealed record FiftyBestEntry(
     byte Rank,
     RestaurantName Name,
     string City,
-    string Country)
+    string Country,
+    // The name as listed in that year's file, which may be an alias of
+    // Name. Null when the entry is not read from a file with aliases.
+    RestaurantName? ListedAs = null)
 {
     public static FiftyBestEntry Parse(string line)
     {
