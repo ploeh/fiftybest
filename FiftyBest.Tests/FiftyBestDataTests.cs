@@ -7,14 +7,14 @@ public sealed class FiftyBestDataTests
     [Fact]
     public void AliasedNamesFormSingleRestaurant()
     {
-        var sut = FiftyBestData.Parse(
+        var actual = FiftyBestData.Parse(
             [
                 (2013, ["12,Frantzén/Lindeberg,Stockholm,Sweden"]),
                 (2019, ["16,Frantzén,Stockholm,Sweden"])
             ],
             ["Frantzén,Frantzén/Lindeberg,Restaurant Frantzén"]);
 
-        var kvp = Assert.Single(sut.Restaurants);
+        var kvp = Assert.Single(actual.Restaurants);
         Assert.Equal("Frantzén", kvp.Key.Name.Name);
         Assert.Equal(
             [new Ranking(2013, 12), new Ranking(2019, 16)],
@@ -44,9 +44,9 @@ public sealed class FiftyBestDataTests
 
                 """);
 
-            var sut = FiftyBestData.Load(path);
+            var actual = FiftyBestData.Load(path);
 
-            var kvp = Assert.Single(sut.Restaurants);
+            var kvp = Assert.Single(actual.Restaurants);
             Assert.Equal("Bras", kvp.Key.Name.Name);
             Assert.Equal(
                 [new Ranking(2002, 40), new Ranking(2011, 30)],
